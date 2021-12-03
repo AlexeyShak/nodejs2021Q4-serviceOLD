@@ -3,8 +3,7 @@ const {v4: uuidv4} = require('uuid');
 const { ERRORS } = require('../constants/errors');
 const {STATUS_CODES} = require('../constants/constants');
 let {users} = require('../repositry/users');
-const {requestDataExtractor} = require('../helpers/requestExtractor');
-const { postObjValidator, putObjValidator } = require('../validators/validators');
+const { tasks } = require('../repositry/tasks');
 
 const getAllUsers =() => {
     return users.map(el => {
@@ -49,6 +48,11 @@ const deleteUser = (userId) => {
             return ERRORS.USER_NOT_FOUND
         }
         users = result;
+        for(let i = 0; i < tasks.length; i++){
+            if(tasks[i].userId === userId){
+                tasks[i].userId = null
+            }
+        }
         return STATUS_CODES.NO_CONTENT;
 }
 
