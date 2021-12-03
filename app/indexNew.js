@@ -1,7 +1,8 @@
 const http = require('http');
 
 const {usersController} = require('./controllers/userController')
-const {boardsController} = require('./controllers/boardsController')
+const {boardsController} = require('./controllers/boardsController');
+const { tasksController } = require('./controllers/tasksController');
 
 http.createServer((request, response) => {
     try{
@@ -10,6 +11,9 @@ http.createServer((request, response) => {
             return usersController(request, response);
         }
         else if(url.startsWith('/boards')){
+            if(url.includes('/tasks')){
+                return tasksController(request,response);
+            }
             return boardsController(request, response);
         }
     }catch (e){

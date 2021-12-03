@@ -14,6 +14,8 @@ export const ERRORS = {
     TITLE_NOT_ENTERED: 'Board property "title" not entered or spelled incorrectly',
     TITLE_NOT_A_STRING: 'Title is not a string',
     COLUMNS_IS_NOT_AN_ARRAY: 'Columns arrnt an array',
-    BOARD_NOT_FOUND: 'Board with requested ID not found. Please check ID input'
+    BOARD_NOT_FOUND: 'Board with requested ID not found. Please check ID input',
+    TASK_NOT_FOUND: 'Task with requested ID not found. Please check ID input',
+    TASK_IN_BOARD_NOT_FOUND: 'Task in board with requested ID not found. Please check ID input'
 
 }
