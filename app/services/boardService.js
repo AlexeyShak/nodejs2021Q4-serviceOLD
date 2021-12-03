@@ -3,6 +3,7 @@ const {v4: uuidv4} = require('uuid');
 const { ERRORS } = require('../constants/errors');
 const {STATUS_CODES} = require('../constants/constants');
 let {boards} = require('../repositry/boards');
+const  {deleteByBoardId} = require('./taskService');
 
 
 const getAllBoards = () =>{
@@ -42,6 +43,7 @@ const deleteBoard = (boardId) => {
             return ERRORS.BOARD_NOT_FOUND
         }
         boards = result;
+        deleteByBoardId(boardId);
         return STATUS_CODES.NO_CONTENT;
 }
 

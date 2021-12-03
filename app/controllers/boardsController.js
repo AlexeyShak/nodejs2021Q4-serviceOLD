@@ -84,6 +84,7 @@ const boardsController = (request, response) =>{
             return sendResponseEnd(response, STATUS_CODES.BAD_REQUEST, ERRORS.WRONG_ID_FORMAT);
         };
         const deletionResult = deleteBoard(boardId);
+        
         if(typeof deletionResult === 'string'){
             return sendResponseEnd(response, STATUS_CODES.NOT_FOUND, deletionResult);
         }

@@ -2,25 +2,39 @@ const { REQUEST_METHODS, STATUS_CODES} = require('../constants/constants');
 const { ERRORS } = require('../constants/errors');
 
 const {sendResponseEnd} = require('../helpers/response');
-const {getAllBoards, getByID, createBoard, updateBoard, deleteBoard} = require('../services/boardService')
 
 const {requestDataExtractor} = require('../helpers/requestExtractor');
-const {postBoardObjValidator, putBoardObjValidator} = require('../validators/validators');
-const { getAllTasks } = require('../services/taskService');
+const {postTaskObjValidator, putBoardObjValidator} = require('../validators/validators');
+const { getAllTasks, getTaskById, createTask , updateTask, deleteTask} = require('../services/taskService');
 
 const uuidValidator = /(\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b)/;
-const tasksUrlValidator = /\/boards\/.+\/tasks/;
-const urlValidator = /\/boards\/.+\/tasks\/.+/;
+const taskIdUrlValidator = /\/boards\/.+\/tasks\/.+/;
 
 
 const tasksController = (request, response) =>{ 
-    if(request.method === REQUEST_METHODS.GET && tasksUrlValidator.test(request.url)){
+    if(request.method === REQUEST_METHODS.GET && request.url.endsWith('tasks')){
         let boardId = request.url.split('/')[2];
         if(!uuidValidator.test(boardId)){
             return sendResponseEnd(response, STATUS_CODES.BAD_REQUEST, ERRORS.WRONG_ID_FORMAT);  
         }
+        let getResult = getAllTasks(boardId);
+        if(typeof getResult === 'string'){
+            return sendResponseEnd(response, STATUS_CODES.NOT_FOUND, getResult);
+        }
+        return sendResponseEnd(response, STATUS_CODES.OK, getResult);
+    }
+    else if(request.method === REQUEST_METHODS.GET && taskIdUrlValidator.test(request.url)){
+        console.log('taskid:', request.url)
+        let boardId = request.url.split('/')[2];
+        if(!uuidValidator.test(boardId)){
+            return sendResponseEnd(response, STATUS_CODES.BAD_REQUEST, ERRORS.WRONG_ID_FORMAT);  
+        }
+        let taskId = request.url.split('/')[4];
+        if(!uuidValidator.test(taskId)){
+            return sendResponseEnd(response, STATUS_CODES.BAD_REQUEST, ERRORS.WRONG_ID_FORMAT);  
+        }
         else {
-            let getResult = getAllTasks(boardId);
+            let getResult = getTaskById(boardId, taskId);
             console.log('user response', getResult);
             if(typeof getResult === 'string'){
                 return sendResponseEnd(response, STATUS_CODES.NOT_FOUND, getResult);
@@ -28,57 +42,54 @@ const tasksController = (request, response) =>{
             return sendResponseEnd(response, STATUS_CODES.OK, getResult);
         }
     }
-    else if(request.method === REQUEST_METHODS.GET && urlValidator.test(request.url)){
+    else if(request.method === REQUEST_METHODS.POST && request.url.endsWith('tasks')){
         let boardId = request.url.split('/')[2];
+        console.log ('board ID', boardId);
         if(!uuidValidator.test(boardId)){
             return sendResponseEnd(response, STATUS_CODES.BAD_REQUEST, ERRORS.WRONG_ID_FORMAT);  
         }
-        else {
-            let getResult = getByID(boardId);
-            console.log('user response', getResult);
-            if(typeof getResult === 'string'){
-                return sendResponseEnd(response, STATUS_CODES.NOT_FOUND, getResult);
-            }
-            return sendResponseEnd(response, STATUS_CODES.OK, getResult);
-        }
-    }
-    else if(request.method === REQUEST_METHODS.POST && request.url === '/boards'){
-        requestDataExtractor(request)
-            .then(postBoard => {
-                let boardObj;
+        return requestDataExtractor(request)
+            .then(postTask => {
+                let taskObj;
                 try{
-                    boardObj = JSON.parse(postBoard);
+                    taskObj = JSON.parse(postTask);
                 }
                 catch (err){
                     return sendResponseEnd(response, STATUS_CODES.SERVER_ERROR, ERRORS.JSON_PARSE_ERR);
                 };
-                const validationError = postBoardObjValidator(boardObj)
+                const validationError = postTaskObjValidator(taskObj)
                 if(validationError === undefined){
-                    createBoard(boardObj);
-                    return sendResponseEnd(response, STATUS_CODES.CREATED, boardObj)
+                    const creationResult = createTask(taskObj, boardId);
+                    if(typeof creationResult == 'string'){
+                        return (response, STATUS_CODES.NOT_FOUND, creationResult)
+                    }
+                    return sendResponseEnd(response, STATUS_CODES.CREATED, creationResult)
                 }
                 sendResponseEnd(response, STATUS_CODES.BAD_REQUEST, validationError);
             });
     }
-    else if(request.method === REQUEST_METHODS.PUT && urlValidator.test(request.url)){
+    else if(request.method === REQUEST_METHODS.PUT && taskIdUrlValidator.test(request.url)){
         let boardId = request.url.split('/')[2];
         if(!uuidValidator.test(boardId)){
             return sendResponseEnd(response, STATUS_CODES.BAD_REQUEST, ERRORS.WRONG_ID_FORMAT);  
-        };
+        }
+        let taskId = request.url.split('/')[4];
+        if(!uuidValidator.test(taskId)){
+            return sendResponseEnd(response, STATUS_CODES.BAD_REQUEST, ERRORS.WRONG_ID_FORMAT);  
+        }
         return requestDataExtractor(request)
-        .then(putBoard => {
-            let putBoardObj;
+        .then(putTask => {
+            let putTaskObj;
             try{
-                putBoardObj = JSON.parse(putBoard);
-                console.log(putBoardObj);
+                putTaskObj = JSON.parse(putTask);
             }
             catch (err){ 
                 return sendResponseEnd(response, STATUS_CODES.SERVER_ERROR, ERRORS.JSON_PARSE_ERR);
             }
-            const validationError = putBoardObjValidator(putBoardObj);
+            const validationError = putBoardObjValidator(putTaskObj);
             console.log('validation error ' ,validationError);
             if(validationError == undefined){
-                const updatedBoard = updateBoard( putBoardObj, boardId)
+                const updatedBoard = updateTask( putTaskObj, boardId, taskId)
                 if(typeof updatedBoard === 'string'){
                     return sendResponseEnd(response, STATUS_CODES.NOT_FOUND, updatedBoard);
                 }
@@ -88,12 +99,16 @@ const tasksController = (request, response) =>{
         })
     
     }
-    else if(request.method === REQUEST_METHODS.DELETE && urlValidator.test(request.url)){
+    else if(request.method === REQUEST_METHODS.DELETE  && taskIdUrlValidator.test(request.url)){
         let boardId = request.url.split('/')[2];
         if(!uuidValidator.test(boardId)){
-            return sendResponseEnd(response, STATUS_CODES.BAD_REQUEST, ERRORS.WRONG_ID_FORMAT);
-        };
-        const deletionResult = deleteBoard(boardId);
+            return sendResponseEnd(response, STATUS_CODES.BAD_REQUEST, ERRORS.WRONG_ID_FORMAT);  
+        }
+        let taskId = request.url.split('/')[4];
+        if(!uuidValidator.test(taskId)){
+            return sendResponseEnd(response, STATUS_CODES.BAD_REQUEST, ERRORS.WRONG_ID_FORMAT);  
+        }
+        const deletionResult = deleteTask(boardId, taskId);
         if(typeof deletionResult === 'string'){
             return sendResponseEnd(response, STATUS_CODES.NOT_FOUND, deletionResult);
         }
