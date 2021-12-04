@@ -3,7 +3,7 @@ const {v4: uuidv4} = require('uuid');
 const { ERRORS } = require('../constants/errors');
 const {STATUS_CODES} = require('../constants/constants');
 let {users} = require('../repositry/users');
-const { nullUserAfterDelete } = require('./taskService');
+const { unassignUserAfterDelete } = require('./taskService');
 
 const getAllUsers =() => {
     return users.map(el => {
@@ -20,10 +20,8 @@ const getById = (userId) => {
         console.log('result after undefined',result)
        return ERRORS.USER_NOT_FOUND
     }
-    else{
-        delete result.password;
-       return result;
-    } ;
+    delete result.password;
+    return result;
 };
 
 const createUser = (newUser) =>{
@@ -44,14 +42,14 @@ const updateUser = (newUserData, userId) => {
 
 const deleteUser = (userId) => {
     let result = users.filter(el => el.id !== userId);
-        if(result.length === users.length){
-            return ERRORS.USER_NOT_FOUND
-        }
-        users = result;
-        nullUserAfterDelete(userId);
-        return STATUS_CODES.NO_CONTENT;
+    if(result.length === users.length){
+        return ERRORS.USER_NOT_FOUND
+    }
+    users = result;
+    unassignUserAfterDelete(userId);
+    return STATUS_CODES.NO_CONTENT;
 }
-//
+
 
 
 

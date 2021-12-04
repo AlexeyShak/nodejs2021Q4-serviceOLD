@@ -4,40 +4,37 @@ const { ERRORS } = require('../constants/errors');
 const {STATUS_CODES} = require('../constants/constants');
 let {tasks} = require('../repositry/tasks');
 let {boards} = require('../repositry/boards');
+const { getByID } = require('./boardService');
 
 const getAllTasks = (boardId) => {
-    const result = boards.find(el => el.id === boardId);
-    console.log ('result:', result)
-    if(result === undefined){
-        return ERRORS.BOARD_NOT_FOUND;
+    let boardExistence = getByID(boardId);
+    if(typeof boardExistence === 'string'){
+        return boardExistence;
     }
     tasksFromBoard = tasks.filter(el => el.boardId === boardId);
-    return tasksFromBoard;
+    return tasksFromBoard ;
 }
 
 const getTaskById = (boardId, taskId) => {
-    let getAllTasksRes = getAllTasks(boardId);
-    if(typeof getAllTasksRes === 'string'){
-        console.log('sjdbckjdwbkc', getAllTasksRes)
-        return getAllTasksRes;
+    let boardExistence = getByID(boardId);
+    if(typeof boardExistence === 'string'){
+        return boardExistence;
     }
-    const result = getAllTasksRes.find(el => el.id === taskId);
-    console.log('result: ',result);
+    const result = tasks.find(el => el.id === taskId);
     if(result === undefined){
        return ERRORS.TASK_NOT_FOUND;
+    }
+    if(boardExistence.id !== result.boardId){
+        return ERRORS.TASK_FROM_ANOTHER_BOARD
     }
        return result;
 };
 
 const createTask = (taskData, boardId) => {
-    let getAllTasksRes = getAllTasks(boardId);
-    if(typeof getAllTasksRes === 'string'){
-        return getAllTasksRes;
+    let boardExistence = getByID(boardId);
+    if(typeof boardExistence === 'string'){
+        return boardExistence;
     }
-    tasksFromBoard = getAllTasksRes.filter(el => el.boardId === boardId);
-    if(tasksFromBoard === undefined){
-        return ERRORS.TASK_IN_BOARD_NOT_FOUND;
-    };
     taskData.id = uuidv4();
     taskData.boardId = boardId;
     tasks.push(taskData);
@@ -45,17 +42,16 @@ const createTask = (taskData, boardId) => {
 };
 
 const updateTask = (newTaskData, boardId, taskId) => {
-    let getAllTasksRes = getAllTasks(boardId);
-    if(typeof getAllTasksRes === 'string'){
-        return getAllTasksRes;
+    let boardExistence = getByID(boardId);
+    if(typeof boardExistence === 'string'){
+        return boardExistence;
     }
-    tasksFromBoard = getAllTasksRes.filter(el => el.id === taskId);
-    if(tasksFromBoard === undefined){
-        return ERRORS.TASK_IN_BOARD_NOT_FOUND;
-    };
     let result = tasks.findIndex(el => el.id === taskId);
     if(result == -1){
-        return ERRORS.BOARD_NOT_FOUND;
+        return ERRORS.TASK_NOT_FOUND;
+    }
+    if(boardExistence.id !== newTaskData.boardId){
+        return ERRORS.TASK_FROM_ANOTHER_BOARD;
     }
     tasks[result].title = newTaskData.title || tasks[result].title;
     tasks[result].order = newTaskData.order || tasks[result].order;
@@ -66,30 +62,35 @@ const updateTask = (newTaskData, boardId, taskId) => {
     return tasks[result];
 };
 const deleteTask = (boardId, taskId) => {
-    let getAllTasksRes = getAllTasks(boardId);
-    if(typeof getAllTasksRes === 'string'){
-        return getAllTasksRes;
+    let boardExistence = getByID(boardId);
+    if(typeof boardExistence === 'string'){
+        return boardExistence;
     }
-    let result = getAllTasksRes.filter(el => el.id === taskId);
-    console.log('after filter', result);
-    if(result === undefined){
-        return ERRORS.TASK_NOT_FOUND;
+    result = tasks.filter(el => el.id !== taskId);
+    if(result.length === tasks.length){
+        return ERRORS.TASK_NOT_FOUND
     }
-    tasks = tasks.filter(el => el.id !== taskId);
+    const taskTodelete = tasks.find(el => el.id === taskId);
+    if(boardExistence.id !== taskTodelete.boardId){
+        return ERRORS.TASK_FROM_ANOTHER_BOARD;
+    }
+    tasks = result;
     return STATUS_CODES.NO_CONTENT;
 }
 
 const deleteByBoardId = (boardId) => {
     tasks = tasks.filter(el => el.boardId !== boardId);
 }
-const nullUserAfterDelete = (userId) =>{
-    for(let i = 0; i < tasks.length; i++){
-        if(tasks[i].userId === userId){
-            tasks[i].userId = null
-        }
-    }
+
+const unassignUserAfterDelete = (userId) =>{
+    result = tasks.map(el => {
+         if(el.userId = userId){
+             el.userId = null;
+         }
+    })
+    tasks = result;
 }
-//
 
 
-module.exports = {getAllTasks, getTaskById, createTask, updateTask, deleteTask, deleteByBoardId, nullUserAfterDelete}
+
+module.exports = {getAllTasks, getTaskById, createTask, updateTask, deleteTask, deleteByBoardId, unassignUserAfterDelete}

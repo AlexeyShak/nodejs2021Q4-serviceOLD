@@ -91,7 +91,38 @@ ID will be generated automaticali with uuid.
 *NOTE: After deletition of the board all its Tasks will be deleted as well.
 
 ## for Tasks: 
-/
+- GET request with URL `http://localhost:{PORT}/boards/{boardId}/tasks` to GET all tasks;
+
+- GET request with URL `http://localhost:{PORT}/boards/{boardId}/tasks/{taskId}` to GET task with corresponding taskId;
+
+- POST request with URL `http://localhost:{PORT}/boards/tasks` to add task.  
+    Task creates in a body of the POST request and has the object type.
+    example:  
+        **{     "title": "Random task",  
+    "order": "Random order",  
+    "description": "Some description",  
+    "userId": null,  
+    "columnId": "c8f746c3-7089-4abc-af07-d66c5548b8f0",  
+    "boardId": "c8f746c3-7089-4abc-af07-d66c5548b8f0"
+    }**
+                
+
+
+*NOTE: all the object properties are required and their values must be of the set type (String for all proprties values, userId might be Null)
+
+- PUT request with URL `http://localhost:{PORT}/boards/{boardId}/tasks/{taskId}` to edit task with corresponding boardId. 
+    Board eddings requared in the body of the PUT request and also has the object type.
+    example:  
+        **{      "title": "Random task",  
+    "order": "Random order",  
+    "description": "Some description",  
+    "userId": null,  
+                }**.  
+
+*NOTE: NOT all the object properties are required but their values must be of the set types (String for all proprties values, userId might be Null).
+
+-DELETE request with URL `http://localhost:{PORT}/boards/{boardId}` to delete task with corresponding taskID.  
+*NOTE: After deletition of the board all its Tasks will be deleted as well.
 
 
 

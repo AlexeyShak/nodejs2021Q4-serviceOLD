@@ -100,7 +100,7 @@ postTaskObjValidator = (obj) => {
         if(!obj.hasOwnProperty('userId')){
             return ERRORS.USERID_NOT_ENTERED;
         }
-        if(typeof obj.userId !== 'string'){
+        if(typeof obj.userId !== 'string' && obj.userId !== null){
             return ERRORS.USERID_IS_NOT_A_STRING_OR_NULL;
         };
         if(!obj.hasOwnProperty('columnId')){
@@ -137,8 +137,5 @@ putTaskObjValidator = (obj) => {
         }
     }
 };
-//
-
-
 
 module.exports = {postObjValidator, putObjValidator, postBoardObjValidator, putBoardObjValidator, postTaskObjValidator};
