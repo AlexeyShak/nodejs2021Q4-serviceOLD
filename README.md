@@ -91,7 +91,7 @@ ID will be generated automaticali with uuid.
 *NOTE: After deletition of the board all its Tasks will be deleted as well.
 
 ## for Tasks: 
-
+/
 
 
 

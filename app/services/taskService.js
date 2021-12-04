@@ -82,6 +82,14 @@ const deleteTask = (boardId, taskId) => {
 const deleteByBoardId = (boardId) => {
     tasks = tasks.filter(el => el.boardId !== boardId);
 }
+const nullUserAfterDelete = (userId) =>{
+    for(let i = 0; i < tasks.length; i++){
+        if(tasks[i].userId === userId){
+            tasks[i].userId = null
+        }
+    }
+}
+//
 
 
-module.exports = {getAllTasks, getTaskById, createTask, updateTask, deleteTask, deleteByBoardId}
+module.exports = {getAllTasks, getTaskById, createTask, updateTask, deleteTask, deleteByBoardId, nullUserAfterDelete}

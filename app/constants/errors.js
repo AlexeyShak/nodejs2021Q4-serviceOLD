@@ -26,3 +26,4 @@ export const ERRORS = {
     COLUMN_NOT_ENTERED: 'Task property "columnId" not entered or spelled incorrectly',
     COLUMN_IS_NOT_A_STRING: 'ColumnId is not a string',
 }
+//
