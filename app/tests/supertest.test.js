@@ -41,7 +41,7 @@ describe('users DETETE', () => {
     it("should delete user", async () => {
         const res = await request
         .delete('/users/73dfa0d7-e233-4762-9037-5ac8f433c971');
-        expect(res.body).toEqual({});
+        expect(res.body).toEqual("");
     });
 })
 describe('users DETETE', () => {
@@ -79,6 +79,6 @@ describe('boards DETETE', () => {
     it("should delete board", async () => {
         const res = await request
         .delete('/boards/00000000-0000-0000-0000-000000000000');
-        expect(res.body).toEqual({});
+        expect(res.body).toEqual("");
     });
 })
