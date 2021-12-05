@@ -26,5 +26,6 @@ export const ERRORS = {
     COLUMN_NOT_ENTERED: 'Task property "columnId" not entered or spelled incorrectly',
     COLUMN_IS_NOT_A_STRING: 'ColumnId is not a string',
     TASK_FROM_ANOTHER_BOARD: 'Task exists, but belongs to other board ',
-    UNKNOWN_URL: 'Unknown URL'
+    UNKNOWN_URL: 'Unknown URL',
+    COLUMNS_NOT_ENTERED: 'Board property "columns" not entered or spelled incorrectly'
 }

@@ -55,10 +55,12 @@ const postBoardObjValidator = (obj) => {
         if(typeof obj.title !== 'string'){
             return ERRORS.TITLE_NOT_A_STRING;
         };
-        if(obj.hasOwnProperty('columns') && !Array.isArray(obj.columns)){
-            return ERRORS.COLUMNS_IS_NOT_AN_ARRAY;
+        if(!obj.hasOwnProperty('columns')){
+            return ERRORS.COLUMNS_NOT_ENTERED;
         }
-
+        if(!Array.isArray(obj.columns)){
+            return ERRORS.COLUMNS_IS_NOT_AN_ARRAY
+        }
     };  
 };
 const putBoardObjValidator = (obj) => {

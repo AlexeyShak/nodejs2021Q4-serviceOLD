@@ -1,4 +1,3 @@
-const {v4: uuidv4} = require('uuid');
 
 const { REQUEST_METHODS, STATUS_CODES} = require('../constants/constants');
 const { ERRORS } = require('../constants/errors');
@@ -24,7 +23,6 @@ const boardsController = (request, response) =>{
         }
         else {
             let getResult = getByID(boardId);
-            console.log('user response', getResult);
             if(typeof getResult === 'string'){
                 return sendResponseEnd(response, STATUS_CODES.NOT_FOUND, getResult);
             }
@@ -65,7 +63,6 @@ const boardsController = (request, response) =>{
                 return sendResponseEnd(response, STATUS_CODES.SERVER_ERROR, ERRORS.JSON_PARSE_ERR);
             }
             const validationError = putBoardObjValidator(putBoardObj);
-            console.log('validation error ' ,validationError);
             if(validationError == undefined){
                 const updatedBoard = updateBoard( putBoardObj, boardId)
                 if(typeof updatedBoard === 'string'){
@@ -78,7 +75,6 @@ const boardsController = (request, response) =>{
     
     }
     else if(request.method === REQUEST_METHODS.DELETE && urlValidator.test(request.url)){
-        console.log('delete request URL', request.url)
         let boardId = request.url.split('/')[2];
         if(!uuidValidator.test(boardId)){
             return sendResponseEnd(response, STATUS_CODES.BAD_REQUEST, ERRORS.WRONG_ID_FORMAT);

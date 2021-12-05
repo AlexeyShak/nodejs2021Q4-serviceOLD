@@ -2,7 +2,7 @@ const {v4: uuidv4} = require('uuid');
 
 let tasks = [{
     id: 'c8f746c3-7089-4abc-af07-000000000000',
-    title: 'Random task',
+    title: 'Random title',
     order: 'Random order',
     description: 'Some description',
     userId: null,

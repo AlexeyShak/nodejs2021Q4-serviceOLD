@@ -51,3 +51,34 @@ describe('users DETETE', () => {
         expect(res.body).toEqual("User with requested ID not found. Please check ID input");
     });
 })
+
+
+describe('boatds GET', () => {
+    it("Gets the test endpoint", async () => {
+        const res = await request.get('/boards');
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.length).toEqual(2);
+    });
+})
+
+describe('boards POST', () => {
+    it("should create new board", async () => {
+        const res = await request
+        .post('/boards')
+        .send({
+            title: 'Random board',
+            columns: []
+        })
+        expect(res.statusCode).toEqual(201);
+        expect(res.body).toHaveProperty('title');
+        expect(res.body).not.toHaveProperty('age')
+    });
+})
+
+describe('boards DETETE', () => {
+    it("should delete board", async () => {
+        const res = await request
+        .delete('/boards/00000000-0000-0000-0000-000000000000');
+        expect(res.body).toEqual({});
+    });
+})

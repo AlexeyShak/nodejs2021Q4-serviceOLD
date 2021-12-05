@@ -3,19 +3,15 @@ const {v4: uuidv4} = require('uuid');
 const { ERRORS } = require('../constants/errors');
 const {STATUS_CODES} = require('../constants/constants');
 let {boards} = require('../repositry/boards');
-const  {deleteByBoardId} = require('./taskService');
-
+let {tasks} = require('../repositry/tasks');
 
 const getAllBoards = () =>{
     return boards;
 }
 
 const getByID = (boardId) => {
-    console.log('board ID: ',boardId)
     const result = boards.find(el => el.id === boardId);
-    console.log('result: ',result);
     if(result === undefined){
-        console.log('result after undefined',result)
        return ERRORS.BOARD_NOT_FOUND;
     }
     return result;
@@ -32,9 +28,7 @@ const updateBoard = (newBoardData, boardId) => {
         return ERRORS.BOARD_NOT_FOUND;
     }
     boards[result].title = newBoardData.title || boards[result].title;
-    if(newBoardData.hasOwnProperty('columns')){
-        boards[result].columns = newBoardData.columns || boards[result].columns;
-    }
+    boards[result].columns = newBoardData.columns || boards[result].columns;
     return boards[result];
 };
 
@@ -44,10 +38,10 @@ const deleteBoard = (boardId) => {
         return ERRORS.BOARD_NOT_FOUND
     }
     boards = result;
-    deleteByBoardId(boardId);
+    tasks = tasks.filter(el => el.boardId !== boardId)
     return STATUS_CODES.NO_CONTENT;
 }
-//
+
 
 
 

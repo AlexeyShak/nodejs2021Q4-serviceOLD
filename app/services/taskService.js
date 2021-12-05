@@ -78,17 +78,18 @@ const deleteTask = (boardId, taskId) => {
     return STATUS_CODES.NO_CONTENT;
 }
 
-const deleteByBoardId = (boardId) => {
+function deleteByBoardId(boardId){
     tasks = tasks.filter(el => el.boardId !== boardId);
+    tasks = result;
+    console.log(result)
 }
 
 const unassignUserAfterDelete = (userId) =>{
-    result = tasks.map(el => {
-         if(el.userId = userId){
-             el.userId = null;
-         }
-    })
-    tasks = result;
+    for(let i = 0; i < tasks.length; i++){
+        if(tasks[i].userId = userId){
+            tasks[i].userId  = null;
+        }
+    }
 }
 
 

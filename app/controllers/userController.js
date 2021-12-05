@@ -25,7 +25,6 @@ const usersController = (request, response) =>{
         }
         else {
             const getResult = getById(userId);
-            console.log('user response', getResult);
             if(getResult === ERRORS.USER_NOT_FOUND){
                 return sendResponseEnd(response, STATUS_CODES.NOT_FOUND, getResult);
             }
@@ -38,7 +37,6 @@ const usersController = (request, response) =>{
                 let dataObj;
                 try{
                     dataObj = JSON.parse(postData);
-                    console.log('validation input', dataObj)
                 }
                 catch (err){
                     return sendResponseEnd(response, STATUS_CODES.SERVER_ERROR, ERRORS.JSON_PARSE_ERR);
@@ -61,13 +59,11 @@ const usersController = (request, response) =>{
             let putDataObj;
             try{
                 putDataObj = JSON.parse(putData);
-                console.log('Put data obj:', putDataObj);
             }
             catch (err){ 
                 return sendResponseEnd(response, STATUS_CODES.SERVER_ERROR, ERRORS.JSON_PARSE_ERR);
             }
             const validationError = putObjValidator(putDataObj);
-            console.log('validation error ' ,validationError);
             if(validationError == undefined){
                 const updateResult = updateUser(putDataObj, userId);
                 if(typeof updateResult === 'string'){
@@ -79,7 +75,6 @@ const usersController = (request, response) =>{
         })
     }
     else if(request.method === REQUEST_METHODS.DELETE && urlValidator.test(request.url)){
-        console.log('delete request URL', request.url)
         let userId = request.url.split('/')[2];
         if(!uuidValidator.test(userId)){
             return sendResponseEnd(response, STATUS_CODES.BAD_REQUEST, ERRORS.WRONG_ID_FORMAT);

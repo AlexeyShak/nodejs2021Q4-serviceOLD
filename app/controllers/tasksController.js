@@ -35,7 +35,6 @@ const tasksController = (request, response) =>{
         }
         else {
             let getResult = getTaskById(boardId, taskId);
-            console.log('user response', getResult);
             if(typeof getResult === 'string'){
                 return sendResponseEnd(response, STATUS_CODES.NOT_FOUND, getResult);
             }
@@ -44,7 +43,6 @@ const tasksController = (request, response) =>{
     }
     else if(request.method === REQUEST_METHODS.POST && request.url.endsWith('tasks')){
         let boardId = request.url.split('/')[2];
-        console.log ('board ID', boardId);
         if(!uuidValidator.test(boardId)){
             return sendResponseEnd(response, STATUS_CODES.BAD_REQUEST, ERRORS.WRONG_ID_FORMAT);  
         }
@@ -87,7 +85,6 @@ const tasksController = (request, response) =>{
                 return sendResponseEnd(response, STATUS_CODES.SERVER_ERROR, ERRORS.JSON_PARSE_ERR);
             }
             const validationError = putTaskObjValidator(putTaskObj);
-            console.log('validation error ' ,validationError);
             if(validationError == undefined){
                 const updatedBoard = updateTask( putTaskObj, boardId, taskId)
                 if(typeof updatedBoard === 'string'){

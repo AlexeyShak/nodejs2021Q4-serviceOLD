@@ -13,11 +13,8 @@ const getAllUsers =() => {
 };
 
 const getById = (userId) => {
-    console.log('user ID: ',userId)
     const result = users.find(el => el.id === userId);
-    console.log('result: ',result);
     if(result === undefined){
-        console.log('result after undefined',result)
        return ERRORS.USER_NOT_FOUND
     }
     delete result.password;
