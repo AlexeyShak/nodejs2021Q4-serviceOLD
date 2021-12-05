@@ -1,6 +1,8 @@
 const { ERRORS } = require("../constants/errors");
 
-postObjValidator = (obj) => {
+const uuidValidator = /(\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b)/;
+
+const postObjValidator = (obj) => {
     if(typeof obj !== 'object'){
         return ERRORS.NOT_AN_OBJECT;
     }
@@ -27,7 +29,7 @@ postObjValidator = (obj) => {
 };
 
 
-putObjValidator = (obj) => {
+const putObjValidator = (obj) => {
     if(typeof obj !== 'object'){
         return ERRORS.NOT_AN_OBJECT;
     }
@@ -42,7 +44,7 @@ putObjValidator = (obj) => {
     };
 
 };
-postBoardObjValidator = (obj) => {
+const postBoardObjValidator = (obj) => {
     if(typeof obj !== 'object'){
         return ERRORS.NOT_AN_OBJECT;
     }
@@ -59,7 +61,7 @@ postBoardObjValidator = (obj) => {
 
     };  
 };
-putBoardObjValidator = (obj) => {
+const putBoardObjValidator = (obj) => {
     if(typeof obj !== 'object'){
         return ERRORS.NOT_AN_OBJECT;
     }
@@ -74,7 +76,7 @@ putBoardObjValidator = (obj) => {
     };  
 };
 
-postTaskObjValidator = (obj) => {
+const postTaskObjValidator = (obj) => {
     if(typeof obj !== 'object'){
         return ERRORS.NOT_AN_OBJECT;
     }
@@ -106,13 +108,13 @@ postTaskObjValidator = (obj) => {
         if(!obj.hasOwnProperty('columnId')){
             return ERRORS.COLUMN_NOT_ENTERED;
         }
-        if(typeof obj.columnId !== 'string'){
-            return ERRORS.COLUMN_IS_NOT_A_STRING;
+        if(!uuidValidator.test(obj.columnId)){
+            return ERRORS.WRONG_ID_FORMAT;
         };
     };  
 };
 
-putTaskObjValidator = (obj) => {
+const putTaskObjValidator = (obj) => {
     if(typeof obj !== 'object'){
         return ERRORS.NOT_AN_OBJECT;
     }
@@ -120,22 +122,22 @@ putTaskObjValidator = (obj) => {
         if(obj.hasOwnProperty('title') && typeof obj.title !== 'string'){
             return ERRORS.TITLE_NOT_A_STRING;
         }
-        if(!obj.hasOwnProperty('order') && typeof obj.order !== 'string'){
+        if(obj.hasOwnProperty('order') && typeof obj.order !== 'string'){
             return ERRORS.ORDER_IS_NOT_A_STRING;
         }
-        if(!obj.hasOwnProperty('description') && typeof obj.description !== 'string'){
+        if(obj.hasOwnProperty('description') && typeof obj.description !== 'string'){
             return ERRORS.DESCRIPTION_IS_NOT_A_STRING;
         }
-        if(!obj.hasOwnProperty('userId') && typeof obj.userId !== 'string'){
+        if(obj.hasOwnProperty('userId') && !uuidValidator.test(obj.userId) && obj.userId !== null){
             return ERRORS.USERID_IS_NOT_A_STRING_OR_NULL;
         }
-        if(!obj.hasOwnProperty('columnId') && typeof obj.columnId !== 'string'){
-            return ERRORS.COLUMN_IS_NOT_A_STRING;
+        if(obj.hasOwnProperty('columnId') && !uuidValidator.test(obj.columnId)){
+            return ERRORS.WRONG_ID_FORMAT;
         }
-        if(!obj.hasOwnProperty('boardId') && !uuidValidator.test(obj.boardId)){
+        if(obj.hasOwnProperty('boardId') && !uuidValidator.test(obj.boardId)){
             return ERRORS.WRONG_ID_FORMAT;
         }
     }
 };
 
-module.exports = {postObjValidator, putObjValidator, postBoardObjValidator, putBoardObjValidator, postTaskObjValidator};
+module.exports = {postObjValidator, putObjValidator, postBoardObjValidator, putBoardObjValidator, putTaskObjValidator, postTaskObjValidator};

@@ -4,7 +4,7 @@ const { ERRORS } = require('../constants/errors');
 const {sendResponseEnd} = require('../helpers/response');
 
 const {requestDataExtractor} = require('../helpers/requestExtractor');
-const {postTaskObjValidator, putBoardObjValidator} = require('../validators/validators');
+const {postTaskObjValidator, putTaskObjValidator} = require('../validators/validators');
 const { getAllTasks, getTaskById, createTask , updateTask, deleteTask} = require('../services/taskService');
 
 const uuidValidator = /(\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b)/;
@@ -86,7 +86,7 @@ const tasksController = (request, response) =>{
             catch (err){ 
                 return sendResponseEnd(response, STATUS_CODES.SERVER_ERROR, ERRORS.JSON_PARSE_ERR);
             }
-            const validationError = putBoardObjValidator(putTaskObj);
+            const validationError = putTaskObjValidator(putTaskObj);
             console.log('validation error ' ,validationError);
             if(validationError == undefined){
                 const updatedBoard = updateTask( putTaskObj, boardId, taskId)
@@ -116,5 +116,4 @@ const tasksController = (request, response) =>{
     }
 }
 
-module.exports = {tasksController}
-//
+module.exports = {tasksController};

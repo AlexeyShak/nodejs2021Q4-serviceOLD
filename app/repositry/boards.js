@@ -12,4 +12,3 @@ let boards = [{
 ];
 
 module.exports = {boards};
-//

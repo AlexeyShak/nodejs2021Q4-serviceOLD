@@ -38,6 +38,7 @@ const usersController = (request, response) =>{
                 let dataObj;
                 try{
                     dataObj = JSON.parse(postData);
+                    console.log('validation input', dataObj)
                 }
                 catch (err){
                     return sendResponseEnd(response, STATUS_CODES.SERVER_ERROR, ERRORS.JSON_PARSE_ERR);
@@ -92,5 +93,4 @@ const usersController = (request, response) =>{
 
 }
 
-module.exports = {usersController}
-//
+module.exports = {usersController};

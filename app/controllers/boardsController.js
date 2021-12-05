@@ -92,5 +92,4 @@ const boardsController = (request, response) =>{
     }
 }
 
-module.exports = {boardsController}
-//
+module.exports = {boardsController};

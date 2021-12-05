@@ -10,5 +10,4 @@ const requestDataExtractor = (req) => {
 
     });
 }
-module.exports = {requestDataExtractor}
-//
+module.exports = {requestDataExtractor};

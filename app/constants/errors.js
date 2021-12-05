@@ -25,6 +25,6 @@ export const ERRORS = {
     USERID_NOT_ENTERED: 'Task property "userId" not entered or spelled incorrectly',
     COLUMN_NOT_ENTERED: 'Task property "columnId" not entered or spelled incorrectly',
     COLUMN_IS_NOT_A_STRING: 'ColumnId is not a string',
-    TASK_FROM_ANOTHER_BOARD: 'Task exists, but belongs to other board '
+    TASK_FROM_ANOTHER_BOARD: 'Task exists, but belongs to other board ',
+    UNKNOWN_URL: 'Unknown URL'
 }
-//
