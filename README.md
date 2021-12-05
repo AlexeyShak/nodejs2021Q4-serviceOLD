@@ -21,9 +21,10 @@ This app contains REST service using in-memory database underneath and operates 
 # How to use
 
 ## Prerequiremenst 
- Pull repository, run ```npm i ```, create .env file this PORT variable (e.g. PORT=4000)
+ git Clone repository, swich to development branch,  run ```npm i ``` in your terminal.
   
-1. Run the comand `npm run start:dev` in your terminal.
+1. Run the comand ```npm run start``` in your terminal.
+
 2. To checkup your requests on server recomended to use API Platform(Postman, RESTClient, etc.) If you  dont want to install separate API Platform you can install browser extension.
 (for Chrome you can get it here https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo ). 
 
@@ -124,6 +125,8 @@ ID will be generated automaticali with uuid.
 -DELETE request with URL `http://localhost:{PORT}/boards/{boardId}` to delete task with corresponding taskID.  
 *NOTE: After deletition of the board all its Tasks will be deleted as well.
 
+#Testing
+1. Run the comand ```npm run test``` in your terminal.
 
 
 
